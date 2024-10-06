@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<title>Futbol Total...</title>
+	<link rel="shortcut icon" type="image/png" href="img/logo-carga.png"/>
+	<link rel="stylesheet" type="text/css" href="main-style.css">
+	<link rel="stylesheet" type="text/css" href="widgetCountries.css">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<script src="jquery.js"></script>
+	<script src="jqueryGlobals.js"></script>
+    <script src="jquery.widgetCountries.js" type="text/javascript"></script>
+	
+</head>
+<!-- Header menu display -->
+<body class="headerMenuDisplay">
+<header>
+	<div class="container">
+		<div class="mainPageHeader">
+			<a href="loguin.html">
+				<img class="logo-img-size-index" src="img/logo-carga.png" alt="Futbol Total">
+			</a>
+			<p class="switchButton"><span></span></p>
+		</div>
+	</div>
+</header>
+<div class="container container-with-errors">
+	<section id="widgetCountries"></section>
+	<section id="widgetLeague"></section>
+	<section id="widgetLiveScore"></section>
+</div>
+</body>
+<script type="text/javascript">
+
+	$(document).ready(function() {
+	    $('#widgetCountries').widgetCountries({
+	        widgetLeagueLocation: '#widgetLeague',
+	        widgetLiveScoreLocation: '#widgetLiveScore',
+	        widgetWidth: '19%',
+	        preferentialLeagues: [1, 3, 4, 28, 302, 244, 207, 175, 168, 152]
+	    });
+
+	    var windowWidthSize = $(window).width();
+
+	    if (windowWidthSize < 769) {
+	        $('.logo-img-size-index').hide();
+	        $('.switchButton').css('margin', '0 auto');
+	        $('.mainPageHeader').css('margin', '0');
+	        $('.mainPageHeader').hide();
+	    }
+	    $('.switchButton').click(function() {
+	        if ($('.widgetLeague').length) {
+	            $('.widgetLiveScore').toggle();
+	            $('.callendar-select-for-mobile').toggle();
+	            $('.widgetLeague').toggle();
+	            if ($('.widgetLeague').is(":visible")) {
+	                $('.switchButton').html('Back to Live Score');
+	            } else {
+	                $('.switchButton').html('Back to League Details');
+	            }
+	        }
+	    });
+
+	});
+
+</script>
+</html>
