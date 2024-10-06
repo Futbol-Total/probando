@@ -24,7 +24,7 @@ function windowOpenMatch(event_key, leagueLogo, fixturesDate, countryName, leagu
 
     sessionStorage.setItem('fixturesDate', fixturesDate);
     var winLoc = $(location).attr("href");
-    winLoc = winLoc.replace('index.html', '');
+    winLoc = winLoc.replace('loguin.html', '');
     winLoc = winLoc.replace('widgetLeagueInfo.html', '');
     var WindowNW = window.open(
         winLoc + 'widgetMatchResults.html?'+newGeneratedLink+'',
@@ -44,7 +44,7 @@ function windowOpenLeagueInfo(leagueId, leagueName, leagueLogo) {
     }
 
     var winLoc = $(location).attr("href");
-    winLoc = winLoc.replace('index.html', '');
+    winLoc = winLoc.replace('loguin.html', '');
     var WindowNW = window.open(
         winLoc + 'widgetLeagueInfo.html',
         "_blank",
