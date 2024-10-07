@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="icono/logo 3.png" type="image/png">
     <title>Futbol Total - Login</title>
@@ -54,54 +53,53 @@
         </div>
     </div>
 
-<!-- Modal de ¿Olvidaste tu contraseña? -->
-<div id="forgot-password-modal" class="modal">
-  <div class="modal-content">
-      <!-- Colocar el botón de cerrar en la esquina superior derecha, independiente -->
-      <span id="close-forgot-password" class="close-button">&times;</span>
-      <!-- Añadir logo dentro del modal, separado del contenido -->
-      <div class="logo-container">
-          <img src="img/logo_3-removebg-preview.png" alt="Logo Futbol Total" class="modal-logo">
-      </div>
-      <h2>Recuperar Contraseña</h2>
-      <form id="forgot-password-form">
-          <label for="recovery-email">Ingresa tu correo electrónico</label>
-          <input type="email" id="recovery-email" placeholder="Correo electrónico" required>
-          <button type="submit">Enviar</button>
-      </form>
-  </div>
-</div>
+    <!-- Modal de ¿Olvidaste tu contraseña? -->
+    <div id="forgot-password-modal" class="modal">
+        <div class="modal-content">
+            <!-- Botón de cerrar -->
+            <span id="close-forgot-password" class="close-button">&times;</span>
+            <!-- Logo del modal -->
+            <div class="logo-container">
+                <img src="img/logo_3-removebg-preview.png" alt="Logo Futbol Total" class="modal-logo">
+            </div>
+            <h2>Recuperar Contraseña</h2>
+            <form id="forgot-password-form">
+                <label for="recovery-email">Ingresa tu correo electrónico</label>
+                <input type="email" id="recovery-email" placeholder="Correo electrónico" required>
+                <button type="submit">Enviar</button>
+            </form>
+            <!-- Mensaje de éxito o error -->
+            <p id="reset-password-message"></p>
+        </div>
+    </div>
 
-<!-- Modal de Registro -->
-<div id="register-modal" class="modal">
-  <div class="modal-content">
-      <!-- Colocar el botón de cerrar en la esquina superior derecha, independiente -->
-      <span id="close-register" class="close-button">&times;</span>
-      <!-- Añadir logo dentro del modal, separado del contenido -->
-      <div class="logo-container">
-          <img src="img/logo_3-removebg-preview.png" alt="Logo Futbol Total" class="modal-logo">
-      </div>
-      <h2>Registro</h2>
-      <form id="register-form">
-          <label for="register-email">Correo Electrónico</label>
-          <input type="email" id="register-email" placeholder="Correo electrónico" required>
-          <label for="register-password">Contraseña</label>
-          <input type="password" id="register-password" placeholder="Contraseña" required>
-          <button type="submit">Registrar</button>
-      </form>
-  </div>
-</div>
+    <!-- Modal de Registro -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-register" class="close-button">&times;</span>
+            <div class="logo-container">
+                <img src="img/logo_3-removebg-preview.png" alt="Logo Futbol Total" class="modal-logo">
+            </div>
+            <h2>Registro</h2>
+            <form id="register-form">
+                <label for="register-email">Correo Electrónico</label>
+                <input type="email" id="register-email" placeholder="Correo electrónico" required>
+                <label for="register-password">Contraseña</label>
+                <input type="password" id="register-password" placeholder="Contraseña" required>
+                <button type="submit">Registrar</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Firebase Authentication y lógica -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
-        import { getDatabase } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-database.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, sendPasswordResetEmail, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
 
         // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDMFTlJxZdDGQ0IV0skUI6ozgPGxLYhsDg",
             authDomain: "futbol-total-b4166.firebaseapp.com",
-            databaseURL: "https://futbol-total-b4166-default-rtdb.firebaseio.com",
             projectId: "futbol-total-b4166",
             storageBucket: "futbol-total-b4166.appspot.com",
             messagingSenderId: "510814548258",
@@ -128,14 +126,29 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
+        // Lógica para enviar el correo de restablecimiento de contraseña
+        document.getElementById('forgot-password-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const email = document.getElementById('recovery-email').value;
+            const messageElement = document.getElementById('reset-password-message');
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                messageElement.textContent = "Correo de restablecimiento enviado. Revisa tu bandeja de entrada.";
+                messageElement.style.color = "green";
+            } catch (error) {
+                console.error("Error al enviar el correo de restablecimiento:", error);
+                messageElement.textContent = "Error al enviar el correo. Intenta nuevamente.";
+                messageElement.style.color = "red";
+            }
+        });
+
         // Manejo de inicio de sesión con Google
         const googleProvider = new GoogleAuthProvider();
         document.getElementById('login-google').addEventListener('click', async () => {
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 const user = result.user;
-
-                // Rellenar los campos de usuario y contraseña
                 document.getElementById('username').value = user.email;
                 document.getElementById('password').value = "GoogleLogin";
             } catch (error) {
@@ -150,8 +163,6 @@
             try {
                 const result = await signInWithPopup(auth, facebookProvider);
                 const user = result.user;
-
-                // Rellenar los campos de usuario y contraseña
                 document.getElementById('username').value = user.email;
                 document.getElementById('password').value = "FacebookLogin";
             } catch (error) {
@@ -169,8 +180,6 @@
                 const code = prompt('Ingresa el código que te llegó por SMS');
                 const result = await confirmationResult.confirm(code);
                 const user = result.user;
-
-                // Rellenar los campos de usuario y contraseña
                 document.getElementById('username').value = user.phoneNumber;
                 document.getElementById('password').value = "PhoneLogin";
             } catch (error) {
@@ -181,8 +190,8 @@
 
         // Redirección solo para el formulario de login tradicional
         document.getElementById('login-button').addEventListener('click', (event) => {
-            event.preventDefault(); // Evita el comportamiento por defecto del botón
-            window.location.href = 'pantalla de carga.html';  // Cambia 'pantalla de carga.html' por el archivo de redirección que usas
+            event.preventDefault();
+            window.location.href = 'pantalla de carga.html';
         });
 
         // Mostrar u ocultar contraseña
